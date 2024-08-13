@@ -1,0 +1,23 @@
+Il vostro gruppo è stato registrato. E' importante che ricordiate i seguenti dati:
+IdGruppo: 2587
+Password: 9LiBeCcio9
+------------------------------------------------------------------------------------------------------------------------------
+Sito web per la gestione di missioni spaziali.
+L’obiettivo del progetto è realizzare un sito web che possa permettere la visualizzazione di varie missioni spaziali eseguite dall'Aurora Rocketry Team.
+
+Descrizione generale del dominio:
+Il progetto proposto è un sito web dedicato alla gestione delle missioni spaziali per l'Aurora Rocketry Team dell'Università di Bologna, in vista della partecipazione alla competizione EuRoC (European Rocketry Challenge). 
+Il sito fornirà, agli studenti del team, un'interfaccia centralizzata per pianificare, monitorare e analizzare le missioni spaziali, inclusi lanci di razzi, esperimenti scientifici e raccolta di dati.
+Sarà disponibile una pagina dedicata alla registrazione degli utenti, dove ogni membro del team potrà creare un account inserendo le proprie informazioni personali e di contatto.
+Operazioni implementate:
+Inserimento di una nuova missione: Gli utenti possono inserire i dettagli di una nuova missione, compresi obiettivi, data di lancio prevista, equipaggiamento necessario e requisiti tecnici.
+Modifica e eliminazione di missioni esistenti: Gli utenti autorizzati possono apportare modifiche ai dettagli delle missioni esistenti o eliminarle se necessario.
+Visualizzazione delle informazioni sulla missione: L'interfaccia consentirà agli utenti di visualizzare in modo chiaro e ordinato tutti i dettagli delle missioni attive e passate, compresi obiettivi, stato attuale, date e riepilogo dell'equipaggiamento.
+Visualizzazione di informazioni statistiche complesse: Gli utenti avranno accesso a dati statistici dettagliati sulle performance delle missioni passate, inclusi grafici sull'efficienza del lancio, il successo degli obiettivi raggiunti e altre metriche rilevanti per il miglioramento delle prestazioni future.
+Gestione degli utenti e dei permessi: L'amministratore del sito potrà gestire gli account degli utenti, assegnare ruoli e impostare i livelli di accesso per garantire la sicurezza e la privacy dei dati sensibili.
+
+Aggiornamento futuro:
+Acquisizione e salvataggio dei dati in tempo reale: 
+In aggiunta alle funzionalità già descritte, il sito web in futuro, per scopi legati alla gara studentesca, sarà in grado di ricevere e memorizzare dati provenienti da sensori di vario tipo, quali accelerometri, giroscopi, sensori di pressione e temperatura, installati sul razzo durante la missione.
+Visualizzazione dei dati in tempo reale: Gli utenti potranno monitorare i dati in tempo reale attraverso grafici e visualizzazioni interattive direttamente sull'interfaccia del sito web durante il lancio e la fase di volo.
+Analisi dei dati post-missione: Una volta completata la missione, i dati raccolti verranno archiviati nel database e resi disponibili per l'analisi post-missione. Gli utenti potranno esaminare i dati dettagliati, confrontarli con gli obiettivi pianificati e trarre conclusioni per migliorare le future missioni.
