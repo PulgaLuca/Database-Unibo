@@ -1,0 +1,34 @@
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('../img/background.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+    filter: blur(8px);
+    z-index: -1; /* Mette l'immagine sfocata dietro al contenuto */
+}
+
+
+.card img {
+    width: 200px;
+    height: 200px;
+    object-fit: cover; /* Mantiene il rapporto di aspetto dell'immagine */
+    margin: 0 auto; /* Centra l'immagine orizzontalmente */
+    display: block; /* Centra l'immagine orizzontalmente */
+}
+
+.card {
+    position: relative;
+    box-shadow: 0 0 15px 0px blue; /* Effetto luce giallo sfocato */
+}
+
+.card .card-body {
+    position: relative;
+    z-index: 2; /* Porta il contenuto sopra il layer sfocato */
+}
