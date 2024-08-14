@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h1 class="title">List of Materials</h1>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Note</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for material in materials %}
+        <tr>
+            <td>{{ material.nome }}</td>
+            <td>{{ material.note }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<div class="col-lg-6 form-container">
+    <h2 class="title">Materials Details</h2>
+    <form id="rocket-form" method="POST" >
+        <!-- First Row -->
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <label for="nome" class="form-label" style="color: white;">Nome</label>
+                <input type="text" class="form-control" id="nome" name="nome">
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="note" class="form-label" style="color: white;">Note</label>
+                <input type="text" class="form-control" id="note" name="note">
+            </div>
+        </div>
+        <!-- Buttons Row -->
+        <div class="d-flex justify-content-between" style="margin-bottom: 200px;">
+            <button type="submit" class="btn btn-success" id="add-btn" formaction="/material/add_material" name="action" value="add">Add</button>
+            <button type="submit" class="btn btn-primary" id="edit-btn" formaction="/material/edit_material" name="action" value="edit">Edit</button>
+            <button type="submit" class="btn btn-danger" id="remove-btn" formaction="/material/remove_material" name="action" value="remove">Remove</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

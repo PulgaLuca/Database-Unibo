@@ -9,21 +9,18 @@ class Membro(db.Model):
     cognome = db.Column(db.String(100))
     email = db.Column(db.String(150), unique=True)
     password = db.Column(db.String(200))
-    incarichi = db.relationship('incarico', backref='membro', lazy=True)
 
 # Classe per la tabella 'Ruolo'
 class Ruolo(db.Model):
     __tablename__ = "ruolo"
 
     nome = db.Column(db.String(100), primary_key=True)
-    incarichi = db.relationship('incarico', backref='ruolo', lazy=True)
 
 # Classe per la tabella 'Dipartimento'
 class Dipartimento(db.Model):
     __tablename__ = "dipartimento"
 
     nome = db.Column(db.String(100), primary_key=True)
-    teams = db.relationship('team', backref='dipartimento', lazy=True)
 
 # Classe per la tabella 'Team'
 class Team(db.Model):
@@ -31,8 +28,6 @@ class Team(db.Model):
 
     nome = db.Column(db.String(100), primary_key=True)
     nomeDipartimento = db.Column(db.String(100), db.ForeignKey('dipartimento.nome'), nullable=False)
-    incarichi = db.relationship('Incarico', backref='team', lazy=True)
-    simulazioni = db.relationship('simulazione', backref='team', lazy=True)
 
 # Classe per la tabella 'Incarico'
 class Incarico(db.Model):
@@ -54,7 +49,6 @@ class Luogo(db.Model):
     citta = db.Column(db.String(100))
     via = db.Column(db.String(100))
     civico = db.Column(db.String(10))
-    missioni = db.relationship('missione', backref='luogo', lazy=True)
 
 # Classe per la tabella 'Obiettivo'
 class Obiettivo(db.Model):
@@ -62,7 +56,6 @@ class Obiettivo(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     nome = db.Column(db.String(100))
-    missioni_obiettivo = db.relationship('missione_obiettivo', backref='obiettivo', lazy=True)
 
 # Classe per la tabella 'Payload'
 class Payload(db.Model):
@@ -74,7 +67,6 @@ class Payload(db.Model):
     lunghezza = db.Column(db.Float)
     larghezza = db.Column(db.Float)
     altezza = db.Column(db.Float)
-    missioni = db.relationship('missione', backref='payload', lazy=True)
 
 # Classe per la tabella 'Materiale'
 class Materiale(db.Model):
@@ -82,7 +74,6 @@ class Materiale(db.Model):
 
     nome = db.Column(db.String(100), primary_key=True)
     note = db.Column(db.Text)
-    razzi = db.relationship('razzo', backref='materiale', lazy=True)
 
 # Classe per la tabella 'Motore'
 class Motore(db.Model):
@@ -94,7 +85,6 @@ class Motore(db.Model):
     impulso = db.Column(db.Float)
     massa = db.Column(db.Float)
     link = db.Column(db.Text, nullable=True)
-    razzi = db.relationship('razzo', backref='motore', lazy=True)
 
 # Classe per la tabella 'Paracadute'
 class Paracadute(db.Model):
@@ -104,7 +94,6 @@ class Paracadute(db.Model):
     modello = db.Column(db.String(100))
     diametro = db.Column(db.Float)
     link = db.Column(db.Text, nullable=True)
-    razzi = db.relationship('razzo', backref='paracadute', lazy=True)
 
 # Classe per la tabella 'Razzo'
 class Razzo(db.Model):
@@ -119,12 +108,7 @@ class Razzo(db.Model):
     nomeMotore = db.Column(db.String(50), db.ForeignKey('motore.nome'), nullable=False)
     nomeParacadute = db.Column(db.String(50), db.ForeignKey('paracadute.nome'), nullable=False)
     nomeMateriale = db.Column(db.String(100), db.ForeignKey('materiale.nome'), nullable=False)
-    missioni = db.relationship('missione', backref='razzo', lazy=True)
-    razzo_sensori = db.relationship('razzo_sensore', backref='razzo', lazy=True)
 
-    motore = db.relationship('motore', backref=db.backref('razzi', lazy=True))
-    paracadute = db.relationship('paracadute', backref=db.backref('razzi', lazy=True))
-    materiale = db.relationship('materiale', backref=db.backref('razzi', lazy=True))
 
 # Classe per la tabella 'Missione'
 class Missione(db.Model):
@@ -138,10 +122,6 @@ class Missione(db.Model):
     idPayload = db.Column(db.Integer, db.ForeignKey('payload.id'), nullable=False)
     nomeRazzo = db.Column(db.String(100), db.ForeignKey('razzo.nome'), nullable=False)
 
-    missioni_obiettivo = db.relationship('missione_obiettivo', backref='missione', lazy=True)
-    missioni_fornitori = db.relationship('missione_fornitore', backref='missione', lazy=True)
-    missioni_consulenza = db.relationship('missione_consulenza', backref='missione', lazy=True)
-    missioni_finanziatore = db.relationship('missione_finanziatore', backref='missione', lazy=True)
 
 # Classe per la tabella 'MissioneObiettivo'
 class MissioneObiettivo(db.Model):
@@ -158,7 +138,7 @@ class AziendaFornitrice(db.Model):
     quantita = db.Column(db.Integer)
     note = db.Column(db.Text)
     link = db.Column(db.Text, nullable=True)
-    missioni_fornitori = db.relationship('missione_fornitore', backref='azienda_fornitrice', lazy=True)
+    
 
 # Classe per la tabella 'MissioneFornitore'
 class MissioneFornitore(db.Model):
@@ -175,7 +155,7 @@ class AziendaConsulenziale(db.Model):
     tipologia = db.Column(db.String(100))
     note = db.Column(db.Text)
     link = db.Column(db.Text, nullable=True)
-    missioni_consulenza = db.relationship('missione_consulenza', backref='azienda_consulenziale', lazy=True)
+    
 
 # Classe per la tabella 'MissioneConsulenza'
 class MissioneConsulenza(db.Model):
@@ -192,7 +172,7 @@ class AziendaFinanziatrice(db.Model):
     importo = db.Column(db.Float)
     note = db.Column(db.Text)
     link = db.Column(db.Text, nullable=True)
-    missioni_finanziatore = db.relationship('missione_finanziatore', backref='azienda_finanziatrice', lazy=True)
+    
 
 # Classe per la tabella 'MissioneFinanziatore'
 class MissioneFinanziatore(db.Model):
@@ -211,8 +191,7 @@ class Sensore(db.Model):
     accuratezza = db.Column(db.Float)
     frequenza = db.Column(db.Float)
     link = db.Column(db.Text, nullable=True)
-    dati_sensore = db.relationship('dato_sensore', backref='sensore', lazy=True)
-    razzo_sensori = db.relationship('razzo_sensore', backref='sensore', lazy=True)
+    
 
 # Classe per la tabella 'DatoSensore'
 class DatoSensore(db.Model):

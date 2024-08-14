@@ -1,0 +1,92 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h1 class="title">List of Rockets</h1>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Launch Date</th>
+            <th>Details</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for rocket in rockets %}
+        <tr>
+            <td>{{ rocket.id }}</td>
+            <td>{{ rocket.nome }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<div class="col-lg-6 form-container">
+    <h2 class="title">Rocket Details</h2>
+    <form id="rocket-form">
+        <!-- First Row -->
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <label for="nome" class="form-label" style="color: white;">Nome</label>
+                <input type="text" class="form-control" id="nome" name="nome">
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="massa" class="form-label" style="color: white;">Massa</label>
+                <input type="number" class="form-control" id="massa" name="massa" step="any">
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="lunghezza" class="form-label" style="color: white;">Lunghezza</label>
+                <input type="number" class="form-control" id="lunghezza" name="lunghezza" step="any">
+            </div>
+        </div>
+        <!-- Second Row -->
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <label for="larghezza" class="form-label" style="color: white;">Larghezza</label>
+                <input type="number" class="form-control" id="larghezza" name="larghezza" step="any">
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="altezza" class="form-label" style="color: white;">Altezza</label>
+                <input type="number" class="form-control" id="altezza" name="altezza" step="any">
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="link" class="form-label" style="color: white;">Link</label>
+                <input type="text" class="form-control" id="link" name="link">
+            </div>
+        </div>
+        <!-- Third Row -->
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <label for="nomeMotore" class="form-label" style="color: white;">Nome Motore</label>
+                <select class="form-select" id="nomeMotore" name="nomeMotore">
+                    {% for motore in motori %}
+                        <option value="{{ motore.nome }}">{{ motore.nome }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="nomeParacadute" class="form-label" style="color: white;">Nome Paracadute</label>
+                <select class="form-select" id="nomeParacadute" name="nomeParacadute">
+                    {% for paracadute in paracaduti %}
+                        <option value="{{ paracadute.nome }}">{{ paracadute.nome }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="nomeMateriale" class="form-label" style="color: white;">Nome Materiale</label>
+                <select class="form-select" id="nomeMateriale" name="nomeMateriale">
+                    {% for materiale in materiali %}
+                        <option value="{{ materiale.nome }}">{{ materiale.nome }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <!-- Buttons Row -->
+        <div class="d-flex justify-content-between">
+            <input type="submit" class="btn btn-success" id="add-btn" value="Add" name="add">
+            <input type="submit" class="btn btn-primary" id="edit-btn" value="Edit" name="edit">
+            <input type="submit" class="btn btn-danger" id="remove-btn" value="Remove" name="remove">
+        </div>
+    </form>
+</div>
+{% endblock %}
