@@ -1,0 +1,119 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h1 class="title">List of Materials</h1>
+<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Tipo</th>
+            <th>Unità misura</th>
+            <th>accuratezza</th>
+            <th>Frequenza</th>
+            <th>Link</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for sensor in sensors %}
+        <tr>
+            <td>{{ sensor.nome }}</td>
+            <td>{{ sensor.tipo }}</td>
+            <td>{{ sensor.unitaMisura }}</td>
+            <td>{{ sensor.accuratezza }}</td>
+            <td>{{ sensor.frequenza }}</td>
+            <td>{{ sensor.link }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<div class="col-lg-6 form-container">
+    <h2 class="title">Sensors Details</h2>
+    <form id="material-form" method="POST" >
+        <!-- First Row -->
+        <input type="hidden" id="old_nome" name="old_nome">
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <label for="new_nome" class="form-label" style="color: white;">Nome</label>
+                <input type="text" class="form-control" id="new_nome" name="new_nome">
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="tipo" class="form-label" style="color: white;">Tipo</label>
+                <input type="text" class="form-control" id="tipo" name="tipo">
+            </div>
+            
+            <div class="col-md-4 mb-3">
+                <label for="unitaMisura" class="form-label" style="color: white;">Unità misura</label>
+                <input type="text" class="form-control" id="unitaMisura" name="unitaMisura">
+            </div>
+            
+            <div class="col-md-4 mb-3">
+                <label for="accuratezza" class="form-label" style="color: white;">Accuratezza</label>
+                <input type="number" class="form-control" id="accuratezza" name="accuratezza">
+            </div>
+            
+            <div class="col-md-4 mb-3">
+                <label for="frequenza" class="form-label" style="color: white;">Frequenza</label>
+                <input type="number" class="form-control" id="frequenza" name="frequenza">
+            </div>
+            
+            <div class="col-md-4 mb-3">
+                <label for="link" class="form-label" style="color: white;">Link</label>
+                <input type="text" class="form-control" id="link" name="link">
+            </div>
+
+        </div>
+        <!-- Buttons Row -->
+        <div class="d-flex justify-content-between" style="margin-bottom: 200px;">
+            <button type="submit" class="btn btn-success" id="add-btn" formaction="/sensor/add_sensor" name="action" value="add">Add</button>
+            <button type="submit" class="btn btn-primary" id="edit-btn" formaction="/sensor/edit_sensor" name="action" value="edit">Edit</button>
+            <button type="submit" class="btn btn-danger" id="remove-btn" formaction="/sensor/remove_sensor" name="action" value="remove">Remove</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block scripts%}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const tableRows = document.querySelectorAll(".table tbody tr");
+
+        tableRows.forEach(row => {
+            row.addEventListener("click", function() {
+                const nome = this.cells[0].textContent;
+                const tipo = this.cells[1].textContent;
+                const unitaMisura = this.cells[2].textContent;
+                const accuratezza = this.cells[3].textContent;
+                const frequenza = this.cells[4].textContent;
+                const link = this.cells[5].textContent;
+
+                document.getElementById("old_nome").value = nome;
+                document.getElementById("new_nome").value = nome;
+                document.getElementById("tipo").value = tipo;
+                document.getElementById("unitaMisura").value = unitaMisura;
+                document.getElementById("accuratezza").value = accuratezza;
+                document.getElementById("frequenza").value = frequenza;
+                document.getElementById("link").value = link;
+            });
+        });
+    });
+
+    function selectMaterial(nome, note) {
+        document.getElementById('old_nome').value = nome;
+        document.getElementById('new_nome').value = nome;
+        document.getElementById('tipo').value = tipo;
+        document.getElementById('unitaMisura').value = unitaMisura;
+        document.getElementById('accuratezza').value = accuratezza;
+        document.getElementById('frequenza').value = frequenza;
+        document.getElementById('link').value = link;
+    }
+
+    document.getElementById('material-form').onsubmit = function() {
+        var newNome = document.getElementById('new_nome').value;
+        if (!newNome) {
+            alert("Il nuovo nome non può essere vuoto!");
+            return false;
+        }
+    };
+</script>
+{% endblock %}

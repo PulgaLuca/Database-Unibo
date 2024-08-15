@@ -5,7 +5,7 @@
 <table class="table table-striped table-hover">
     <thead>
         <tr>
-            <th>Nome</th>
+            <th>Name</th>
             <th>Note</th>
         </tr>
     </thead>
@@ -62,13 +62,18 @@
     });
 
     function selectMaterial(nome, note) {
+        // Salva old_nome
         document.getElementById('old_nome').value = nome;
+
+        // Precompila i campi del form con i valori attuali
         document.getElementById('new_nome').value = nome;
         document.getElementById('note').value = note;
     }
 
+    // Assicurati che quando invii il modulo, old_nome e new_nome siano correttamente popolati
     document.getElementById('material-form').onsubmit = function() {
         var newNome = document.getElementById('new_nome').value;
+        // Se necessario, puoi fare ulteriori validazioni qui
         if (!newNome) {
             alert("Il nuovo nome non può essere vuoto!");
             return false;

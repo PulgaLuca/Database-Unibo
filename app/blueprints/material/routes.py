@@ -30,12 +30,12 @@ def add_material():
 def edit_material():
     try:
         data = request.form
-        old_razzo = Materiale.query.get(data['old_nome'])
+        old_nome = Materiale.query.get(data['old_nome'])
         
-        if old_razzo:
+        if old_nome:
             # Modifica il record esistente
-            old_razzo.nome = data['new_nome']
-            old_razzo.note = data['note']
+            old_nome.nome = data['new_nome']
+            old_nome.note = data['note']
             db.session.commit()
             flash('Materiale modificato con successo!', 'success')
         else:
