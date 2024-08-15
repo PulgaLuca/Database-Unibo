@@ -10,6 +10,8 @@ def create_app():
     migrate.init_app(app, db)
 
     # Blueprints registrations.
+    # from .blueprints.auth import auth_bp
+    from .blueprints.main import main_bp
     from .blueprints.mission import mission_bp
     from .blueprints.rocket import rocket_bp
     from .blueprints.sensor import sensor_bp
@@ -18,11 +20,10 @@ def create_app():
     from .blueprints.goal import goal_bp
     from .blueprints.location import location_bp
     from .blueprints.motor import motor_bp
+    from .blueprints.parafoil import parafoil_bp
     
-    # from .blueprints.auth import auth_bp
-    from .blueprints.main import main_bp
-    app.register_blueprint(main_bp, url_prefix='/')
     # app.register_blueprint(auth_bp, url_prefix='/auth')
+    app.register_blueprint(main_bp, url_prefix='/')
     app.register_blueprint(material_bp, url_prefix='/material')
     app.register_blueprint(mission_bp, url_prefix='/mission')
     app.register_blueprint(rocket_bp, url_prefix='/rocket')
@@ -31,5 +32,6 @@ def create_app():
     app.register_blueprint(goal_bp, url_prefix='/goal')
     app.register_blueprint(location_bp, url_prefix='/location')
     app.register_blueprint(motor_bp, url_prefix='/motor')
+    app.register_blueprint(parafoil_bp, url_prefix='/parafoil')
     
     return app
