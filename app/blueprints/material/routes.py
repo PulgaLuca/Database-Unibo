@@ -5,7 +5,7 @@ from app import db
 
 @material_bp.route('/materials')
 def materials():
-    materials = Materiale.query.all()
+    materials = Materiale.query.order_by(Materiale.nome.asc()).all()
     print(materials)
     return render_template('materials.html', materials=materials)
 
@@ -14,7 +14,7 @@ def add_material():
     try:
         data = request.form
         nuovo_materiale = Materiale(
-            nome=data['nome'],
+            nome=data['new_nome'],
             note=data['note'],
         )
         db.session.add(nuovo_materiale)
@@ -25,31 +25,38 @@ def add_material():
         flash(f'Errore durante l\'aggiunta del materiale: {str(e)}', 'danger')
     return redirect(url_for('material.materials'))
 
+
 @material_bp.route('/edit_material', methods=['POST'])
 def edit_material():
     try:
         data = request.form
-        razzo = Materiale.query.get(data['nome'])
-        if razzo:
-            razzo.note = data['note']
-
+        old_razzo = Materiale.query.get(data['old_nome'])
+        
+        if old_razzo:
+            # Modifica il record esistente
+            old_razzo.nome = data['new_nome']
+            old_razzo.note = data['note']
             db.session.commit()
             flash('Materiale modificato con successo!', 'success')
+        else:
+            flash('Materiale non trovato!', 'danger')
     except Exception as e:
         db.session.rollback()
         flash(f'Errore durante la modifica del materiale: {str(e)}', 'danger')
-    return redirect(url_for('materials'))
+    
+    return redirect(url_for('material.materials'))
+
 
 @material_bp.route('/remove_material', methods=['POST'])
 def remove_material():
     try:
-        nome = request.form['nome']
-        razzo = Materiale.query.get(nome)
-        if razzo:
-            db.session.delete(razzo)
+        nome = request.form['new_nome']
+        material = Materiale.query.get(nome)
+        if material:
+            db.session.delete(material)
             db.session.commit()
             flash('Materiale rimosso con successo!', 'success')
     except Exception as e:
         db.session.rollback()
         flash(f'Errore durante la rimozione del materiale: {str(e)}', 'danger')
-    return redirect(url_for('materials'))
+    return redirect(url_for('material.materials'))
