@@ -15,6 +15,7 @@ def create_app():
     from .blueprints.sensor import sensor_bp
     from .blueprints.material import material_bp
     from .blueprints.payload import payload_bp
+    from .blueprints.goal import goal_bp
     
     # from .blueprints.auth import auth_bp
     from .blueprints.main import main_bp
@@ -25,5 +26,6 @@ def create_app():
     app.register_blueprint(rocket_bp, url_prefix='/rocket')
     app.register_blueprint(sensor_bp, url_prefix='/sensor')
     app.register_blueprint(payload_bp, url_prefix='/payload')
+    app.register_blueprint(goal_bp, url_prefix='/goal')
     
     return app
