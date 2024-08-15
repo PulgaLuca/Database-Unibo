@@ -17,6 +17,7 @@ def create_app():
     from .blueprints.payload import payload_bp
     from .blueprints.goal import goal_bp
     from .blueprints.location import location_bp
+    from .blueprints.motor import motor_bp
     
     # from .blueprints.auth import auth_bp
     from .blueprints.main import main_bp
@@ -29,5 +30,6 @@ def create_app():
     app.register_blueprint(payload_bp, url_prefix='/payload')
     app.register_blueprint(goal_bp, url_prefix='/goal')
     app.register_blueprint(location_bp, url_prefix='/location')
+    app.register_blueprint(motor_bp, url_prefix='/motor')
     
     return app
