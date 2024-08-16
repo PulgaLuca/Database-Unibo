@@ -23,6 +23,7 @@ def create_app():
     from .blueprints.parafoil import parafoil_bp
     from .blueprints.people import people_bp
     from .blueprints.dashboard import dashboard_bp
+    from .blueprints.firms import firm_bp
 
     # app.register_blueprint(auth_bp, url_prefix='/auth')
     app.register_blueprint(main_bp, url_prefix='/')
@@ -37,5 +38,6 @@ def create_app():
     app.register_blueprint(parafoil_bp, url_prefix='/parafoil')
     app.register_blueprint(people_bp, url_prefix='/people')
     app.register_blueprint(dashboard_bp, url_prefix='/dashboard')
+    app.register_blueprint(firm_bp, url_prefix='/firm')
     
     return app
