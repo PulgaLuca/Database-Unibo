@@ -1,7 +1,8 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
-from ...models import AziendaConsulenziale, AziendaFinanziatrice, AziendaFornitrice, MissioneConsulenza, MissioneFinanziatore, MissioneFornitore
+from flask import Blueprint, jsonify, render_template, request, redirect, url_for, flash
+from ...models import AziendaConsulenziale, AziendaFinanziatrice, AziendaFornitrice, MissioneConsulenza, MissioneFinanziatore, MissioneFornitore, Missione
 from . import firm_bp  # Importa il blueprint definito in __init__.py
 from app import db
+
 
 @firm_bp.route('/firms', methods=['GET', 'POST'])
 def firms():
@@ -178,3 +179,56 @@ def consulenza_remove_azienda():
         db.session.rollback()
         flash(f'Errore durante la rimozione dell\'azienda: {str(e)}', 'danger')
     return redirect(url_for('firms.firms'))
+
+############################################## TEST ##############################################
+
+# Dizionario per mappare i tipi di entità ai rispettivi modelli di SQLAlchemy
+MODELLI = {
+    'consulenza': MissioneConsulenza,
+    'fornitore': MissioneFornitore,
+    'finanziatore': MissioneFinanziatore,
+}
+
+def get_modello(tipo_entita):
+    modello = MODELLI.get(tipo_entita)
+    if modello is None:
+        raise ValueError(f"Tipo di entità '{tipo_entita}' non supportato.")
+    return modello
+
+@firm_bp.route('/get_missioni/<tipo_entita>/<nome_entita>')
+def get_missioni(tipo_entita, nome_entita):
+    modello = get_modello(tipo_entita)
+    missioni = modello.query.filter_by(nomeAzienda=nome_entita).all()
+    missioni_data = [{'idMissione': missione.idMissione} for missione in missioni]
+    return jsonify({'missioni': missioni_data})
+
+
+@firm_bp.route('/manage_mission/<tipo_entita>/<nome_entita>', methods=['POST'])
+def manage_mission(tipo_entita, nome_entita):
+    data = request.get_json()
+    action = data['action']
+    missionId = data['missionId']
+
+    modello = get_modello(tipo_entita)
+
+    # Controlla se la missione esiste nel database
+    missione_esistente = db.session.query(db.exists().where(Missione.id == missionId)).scalar()
+    if not missione_esistente:
+        return jsonify({'success': False, 'message': 'ID missione non esistente.'})
+
+    if action == 'aggiungi':
+        nuova_missione = modello(idMissione=missionId, nomeAzienda=nome_entita)
+        db.session.add(nuova_missione)
+        db.session.commit()
+    elif action == 'modifica':
+        missione = modello.query.filter_by(idMissione=missionId, nomeAzienda=nome_entita).first()
+        if missione:
+            missione.idMissione = missionId
+            db.session.commit()
+    elif action == 'rimuovi':
+        missione = modello.query.filter_by(idMissione=missionId, nomeAzienda=nome_entita).first()
+        if missione:
+            db.session.delete(missione)
+            db.session.commit()
+
+    return jsonify({'success': True})
