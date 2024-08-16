@@ -43,7 +43,6 @@ def edit_material():
     except Exception as e:
         db.session.rollback()
         flash(f'Errore durante la modifica del materiale: {str(e)}', 'danger')
-    
     return redirect(url_for('material.materials'))
 
 
