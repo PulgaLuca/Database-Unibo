@@ -1,28 +1,38 @@
-from ...models import Missione
+from datetime import datetime
+from ...models import Missione, Luogo, Payload, Razzo
 from . import mission_bp  # Importa il blueprint definito in __init__.py
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from app import db
 
 @mission_bp.route('/missions')
 def missions():
-    missions = Missione.query.order_by(Missione.id.asc()).all()
-    print(missions)
-    return render_template('missions.html', missions=missions)
+    missioni = Missione.query.order_by(Missione.id.asc()).all()
+    luoghi = Luogo.query.order_by(Luogo.id.asc()).all()
+    payloads = Payload.query.order_by(Payload.id.asc()).all()
+    razzi = Razzo.query.order_by(Razzo.nome.asc()).all()
+    return render_template('mission.html', missioni=missioni, luoghi=luoghi, payloads=payloads, razzi=razzi)
+
 
 @mission_bp.route('/add_mission', methods=['POST'])
 def add_mission():
     try:
         data = request.form
-        nuovo_missione = Missione(
-            nome=data['new_nome'],
-            note=data['note'],
+        data_inizio = datetime.strptime(data['mission-dataLancio'], '%Y-%m-%d').date()
+        
+        nuova_missione = Missione(
+            nome=data['mission-nome'],
+            dataLancio=data_inizio,
+            stato=data['mission-stato'],
+            idLuogo=int(data['mission-idLuogo']),
+            idPayload=int(data['mission-idPayload']),
+            nomeRazzo=data['mission-nomeRazzo']
         )
-        db.session.add(nuovo_missione)
+        db.session.add(nuova_missione)
         db.session.commit()
-        flash('Missione aggiunto con successo!', 'success')
+        flash('Missione aggiunta con successo!', 'success')
     except Exception as e:
         db.session.rollback()
-        flash(f'Errore durante l\'aggiunta del missione: {str(e)}', 'danger')
+        flash(f'Errore durante l\'aggiunta della missione: {str(e)}', 'danger')
     return redirect(url_for('mission.missions'))
 
 
@@ -30,33 +40,48 @@ def add_mission():
 def edit_mission():
     try:
         data = request.form
-        old_razzo = Missione.query.get(data['old_nome'])
-        
-        if old_razzo:
-            # Modifica il record esistente
-            old_razzo.nome = data['new_nome']
-            old_razzo.note = data['note']
+        print(data)
+        missione = Missione.query.filter_by(
+            id=data['old-mission-id'],
+            idPayload=int(data['old-mission-idPayload']),
+            idLuogo=data['old-mission-idLuogo'],
+            nomeRazzo=data['old-mission-nomeRazzo']
+        ).first()
+
+        if missione:
+            missione.nome = data['mission-nome']
+            missione.dataLancio = datetime.strptime(data['mission-dataLancio'], '%Y-%m-%d').date()
+            missione.stato = data['mission-stato']
+            missione.idLuogo = int(data['mission-idLuogo'])
+            missione.idPayload = int(data['mission-idPayload'])
+            missione.nomeRazzo = data['mission-nomeRazzo']
             db.session.commit()
-            flash('Missione modificato con successo!', 'success')
+            flash('Missione modificata con successo!', 'success')
         else:
-            flash('Missione non trovato!', 'danger')
+            flash('Missione non trovata!', 'danger')
     except Exception as e:
         db.session.rollback()
-        flash(f'Errore durante la modifica del missione: {str(e)}', 'danger')
-    
+        flash(f'Errore durante la modifica della missione: {str(e)}', 'danger')    
     return redirect(url_for('mission.missions'))
 
 
 @mission_bp.route('/remove_mission', methods=['POST'])
 def remove_mission():
     try:
-        nome = request.form['new_nome']
-        mission = Missione.query.get(nome)
-        if mission:
-            db.session.delete(mission)
+        data = request.form
+        missione = Missione.query.filter_by(
+            id=data['mission-id'],
+            idPayload=int(data['mission-idPayload']),
+            idLuogo=data['mission-idLuogo'],
+            nomeRazzo=data['mission-nomeRazzo']
+        ).first()
+        if missione:
+            db.session.delete(missione)
             db.session.commit()
-            flash('Missione rimosso con successo!', 'success')
+            flash('Missione rimossa con successo!', 'success')
+        else:
+            flash('Missione non trovata!', 'danger')
     except Exception as e:
         db.session.rollback()
-        flash(f'Errore durante la rimozione del missione: {str(e)}', 'danger')
+        flash(f'Errore durante la rimozione della missione: {str(e)}', 'danger')
     return redirect(url_for('mission.missions'))
