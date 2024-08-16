@@ -4,7 +4,7 @@ from .extensions import db
 class Membro(db.Model):
     __tablename__ = "membro"
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     nome = db.Column(db.String(100))
     cognome = db.Column(db.String(100))
     email = db.Column(db.String(150), unique=True)
@@ -43,7 +43,7 @@ class Incarico(db.Model):
 class Luogo(db.Model):
     __tablename__ = "luogo"
     
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     stato = db.Column(db.String(100))
     regione = db.Column(db.String(100))
     citta = db.Column(db.String(100))
@@ -54,14 +54,14 @@ class Luogo(db.Model):
 class Obiettivo(db.Model):
     __tablename__ = "obiettivo"
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     nome = db.Column(db.String(100))
 
 # Classe per la tabella 'Payload'
 class Payload(db.Model):
     __tablename__ = "payload"
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     nome = db.Column(db.String(100))
     massa = db.Column(db.Float)
     lunghezza = db.Column(db.Float)
@@ -114,7 +114,7 @@ class Razzo(db.Model):
 class Missione(db.Model):
     __tablename__ = "missione"
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     nome = db.Column(db.String(100))
     dataLancio = db.Column(db.Date)
     stato = db.Column(db.String(100))
@@ -197,7 +197,7 @@ class Sensore(db.Model):
 class DatoSensore(db.Model):
     __tablename__ = "dato_sensore"
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     valore = db.Column(db.Float)
     timestamp = db.Column(db.DateTime)
     idMissione = db.Column(db.Integer, db.ForeignKey('missione.id'), nullable=False)

@@ -1,8 +1,8 @@
-"""new try
+"""empty message
 
-Revision ID: c9a4b4548909
+Revision ID: b46e1407286f
 Revises: 
-Create Date: 2024-08-14 17:36:43.885302
+Create Date: 2024-08-16 11:51:31.564494
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'c9a4b4548909'
+revision = 'b46e1407286f'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -44,7 +44,7 @@ def upgrade():
     sa.PrimaryKeyConstraint('nome')
     )
     op.create_table('luogo',
-    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('stato', sa.String(length=100), nullable=True),
     sa.Column('regione', sa.String(length=100), nullable=True),
     sa.Column('citta', sa.String(length=100), nullable=True),
@@ -58,7 +58,7 @@ def upgrade():
     sa.PrimaryKeyConstraint('nome')
     )
     op.create_table('membro',
-    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('nome', sa.String(length=100), nullable=True),
     sa.Column('cognome', sa.String(length=100), nullable=True),
     sa.Column('email', sa.String(length=150), nullable=True),
@@ -76,7 +76,7 @@ def upgrade():
     sa.PrimaryKeyConstraint('nome')
     )
     op.create_table('obiettivo',
-    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('nome', sa.String(length=100), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
@@ -88,7 +88,7 @@ def upgrade():
     sa.PrimaryKeyConstraint('nome')
     )
     op.create_table('payload',
-    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('nome', sa.String(length=100), nullable=True),
     sa.Column('massa', sa.Float(), nullable=True),
     sa.Column('lunghezza', sa.Float(), nullable=True),
@@ -142,7 +142,7 @@ def upgrade():
     sa.PrimaryKeyConstraint('dataInizio', 'nomeTeam', 'idMembro', 'nomeRuolo')
     )
     op.create_table('missione',
-    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('nome', sa.String(length=100), nullable=True),
     sa.Column('dataLancio', sa.Date(), nullable=True),
     sa.Column('stato', sa.String(length=100), nullable=True),
@@ -172,7 +172,7 @@ def upgrade():
     sa.PrimaryKeyConstraint('id', 'nomeRazzo')
     )
     op.create_table('dato_sensore',
-    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('valore', sa.Float(), nullable=True),
     sa.Column('timestamp', sa.DateTime(), nullable=True),
     sa.Column('idMissione', sa.Integer(), nullable=False),

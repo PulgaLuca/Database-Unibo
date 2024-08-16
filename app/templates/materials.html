@@ -61,12 +61,6 @@
         });
     });
 
-    function selectMaterial(nome, note) {
-        document.getElementById('old_nome').value = nome;
-        document.getElementById('new_nome').value = nome;
-        document.getElementById('note').value = note;
-    }
-
     document.getElementById('material-form').onsubmit = function() {
         var newNome = document.getElementById('new_nome').value;
         if (!newNome) {

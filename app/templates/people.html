@@ -1,0 +1,310 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h1 class="title">Gestione personale</h1>
+
+<div class="col-lg-6 form-container">
+    <h2 class="title">Dipartimenti</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Nome</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for dipartimento in dipartimenti %}
+            <tr data-entity="dipartimento" data-nome="{{ dipartimento.nome }}">
+                <td>{{ dipartimento.nome }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <h2 class="title">Gestione Dipartimenti</h2>
+    <form id="dipartimento-form" method="POST">
+        <input type="hidden" id="old_name_dipartimento" name="old_name_dipartimento">
+        <!-- First Row -->
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <label for="dipartimento-nome" class="form-label" style="color: white;">Nome Dipartimento</label>
+                <input type="text" class="form-control" id="dipartimento-nome" name="dipartimento-nome">
+            </div>
+        </div>
+        <!-- Buttons Row -->
+        <div class="d-flex justify-content-between" style="margin-bottom: 200px;">
+            <button type="submit" class="btn btn-success" id="add-dipartimento-btn" formaction="{{ url_for('people.add_department') }}" name="action" value="add">Add</button>
+            <button type="submit" class="btn btn-primary" id="edit-dipartimento-btn" formaction="{{ url_for('people.edit_department') }}" name="action" value="edit">Edit</button>
+            <button type="submit" class="btn btn-danger" id="remove-dipartimento-btn" formaction="{{ url_for('people.remove_department') }}" name="action" value="delete">Remove</button>
+        </div>
+    </form>
+</div>
+
+
+
+<div class="col-lg-6 form-container">
+    <h2 class="title">Team</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Dipartimento</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for team in teams %}
+            <tr data-entity="team" data-nome="{{ team.nome }}" data-nomedipartimento="{{ team.nomeDipartimento }}">
+                <td>{{ team.nome }}</td>
+                <td>{{ team.nomeDipartimento }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <h2 class="title">Gestione Team</h2>
+    <form id="team-form" method="POST">
+        
+        <input type="hidden" id="old_name_team" name="old_name_team">
+        <!-- First Row -->
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <label for="team-nome" class="form-label" style="color: white;">Nome Team</label>
+                <input type="text" class="form-control" id="team-nome" name="team-nome">
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="team-nomedipartimento" class="form-label" style="color: white;">Dipartimento</label>
+                <select class="form-control" id="team-nomedipartimento" name="team-nomedipartimento">
+                    <option value="">Seleziona Dipartimento</option>
+                    {% for dipartimento in dipartimenti %}
+                    <option value="{{ dipartimento.nome }}">{{ dipartimento.nome }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <!-- Buttons Row -->
+        <div class="d-flex justify-content-between" style="margin-bottom: 200px;">
+            <button type="submit" class="btn btn-success" id="add-team-btn" formaction="{{ url_for('people.add_team') }}" name="action" value="add">Add</button>
+            <button type="submit" class="btn btn-primary" id="edit-team-btn" formaction="{{ url_for('people.edit_team') }}" name="action" value="edit">Edit</button>
+            <button type="submit" class="btn btn-danger" id="remove-team-btn" formaction="{{ url_for('people.remove_team') }}" name="action" value="delete">Remove</button>
+        </div>
+    </form>
+</div>
+
+
+<div class="col-lg-6 form-container">
+    <h2 class="title">Ruoli</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Nome</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ruolo in ruoli %}
+            <tr data-entity="ruolo" data-nome="{{ ruolo.nome }}">
+                <td>{{ ruolo.nome }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <h2 class="title">Gestione Ruoli</h2>
+    <form id="ruolo-form" method="POST">
+        
+        <input type="hidden" id="old_name_ruolo" name="old_name_ruolo">
+        <!-- First Row -->
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <label for="ruolo-nome" class="form-label" style="color: white;">Nome Ruolo</label>
+                <input type="text" class="form-control" id="ruolo-nome" name="ruolo-nome">
+            </div>
+        </div>
+        <!-- Buttons Row -->
+        <div class="d-flex justify-content-between" style="margin-bottom: 200px;">
+            <button type="submit" class="btn btn-success" id="add-ruolo-btn" formaction="{{ url_for('people.add_role') }}" name="action" value="add">Add</button>
+            <button type="submit" class="btn btn-primary" id="edit-ruolo-btn" formaction="{{ url_for('people.edit_role') }}" name="action" value="edit">Edit</button>
+            <button type="submit" class="btn btn-danger" id="remove-ruolo-btn" formaction="{{ url_for('people.remove_role') }}" name="action" value="delete">Remove</button>
+        </div>
+    </form>
+</div>
+
+
+
+<h2 class="title">Membri</h2>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>Cognome</th>
+            <th>Email</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for membro in membri %}
+        <tr data-entity="membro" data-id="{{ membro.id }}" data-nome="{{ membro.nome }}" data-cognome="{{ membro.cognome }}" data-email="{{ membro.email }}">
+            <td>{{ membro.id }}</td>
+            <td>{{ membro.nome }}</td>
+            <td>{{ membro.cognome }}</td>
+            <td>{{ membro.email }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<div class="col-lg-6 form-container">
+    <h2 class="title">Gestione Membri</h2>
+    <form id="membro-form" method="POST">
+        <!-- First Row -->
+        <input type="hidden" id="membro-id" name="membro-id">
+        <div class="row">
+            <div class="col-6 mb-3">
+                <label for="membro-nome" class="form-label" style="color: white;">Nome</label>
+                <input type="text" class="form-control" id="membro-nome" name="membro-nome">
+            </div>
+            <div class="col-6 mb-3">
+                <label for="membro-cognome" class="form-label" style="color: white;">Cognome</label>
+                <input type="text" class="form-control" id="membro-cognome" name="membro-cognome">
+            </div>
+            <div class="col-6 mb-3">
+                <label for="membro-email" class="form-label" style="color: white;">Email</label>
+                <input type="email" class="form-control" id="membro-email" name="membro-email">
+            </div>
+            <div class="col-6 mb-3">
+                <label for="membro-password" class="form-label" style="color: white;">Password</label>
+                <input type="password" class="form-control" id="membro-password" name="membro-password">
+            </div>
+        </div>
+        <!-- Buttons Row -->
+        <div class="d-flex justify-content-between" style="margin-bottom: 200px;">
+            <button type="submit" class="btn btn-success" id="add-membro-btn" formaction="{{ url_for('people.add_member') }}" name="action" value="add">Add</button>
+            <button type="submit" class="btn btn-primary" id="edit-membro-btn" formaction="{{ url_for('people.edit_member') }}" name="action" value="edit">Edit</button>
+            <button type="submit" class="btn btn-danger" id="remove-membro-btn" formaction="{{ url_for('people.remove_member') }}" name="action" value="delete">Remove</button>
+        </div>
+    </form>
+</div>
+
+
+<div class="col-lg-6 form-container">
+<h2 class="title">Incarichi</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Data Inizio</th>
+                <th>Data Fine</th>
+                <th>Team</th>
+                <th>Membro</th>
+                <th>Ruolo</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for incarico in incarichi %}
+        <tr data-entity="incarico" 
+            data-datainizio="{{ incarico.dataInizio }}" 
+            data-datafine="{{ incarico.dataFine }}" 
+            data-nometeam="{{ incarico.nomeTeam }}" 
+            data-idmembro="{{ incarico.idMembro }}" 
+            data-nomeruolo="{{ incarico.nomeRuolo }}">
+            <td>{{ incarico.dataInizio }}</td>
+            <td>{{ incarico.dataFine }}</td>
+            <td>{{ incarico.nomeTeam }}</td>
+            <td>{{ incarico.idMembro }}</td>
+            <td>{{ incarico.nomeRuolo }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <h2 class="title">Gestione Incarichi</h2>
+    <h2 class="title">Gestione Incarichi</h2>
+    <form id="incarico-form" method="POST">
+        <input type="hidden" id="old-incarico-dataInizio" name="old-incarico-dataInizio">
+        <input type="hidden" id="old-incarico-nomeTeam" name="old-incarico-nomeTeam">
+        <input type="hidden" id="old-incarico-idMembro" name="old-incarico-idMembro">
+        <input type="hidden" id="old-incarico-nomeRuolo" name="old-incarico-nomeRuolo">
+
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <label for="incarico-dataInizio" class="form-label" style="color: white;">Data Inizio</label>
+                <input type="date" class="form-control" id="incarico-dataInizio" name="incarico-dataInizio">
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="incarico-dataFine" class="form-label" style="color: white;">Data Fine</label>
+                <input type="date" class="form-control" id="incarico-dataFine" name="incarico-dataFine">
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="incarico-nomeTeam" class="form-label" style="color: white;">Team</label>
+                <select class="form-control" id="incarico-nomeTeam" name="incarico-nomeTeam">
+                    <option value="">Seleziona Team</option>
+                    {% for team in teams %}
+                    <option value="{{ team.nome }}">{{ team.nome }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="incarico-idMembro" class="form-label" style="color: white;">Membro</label>
+                <select class="form-control" id="incarico-idMembro" name="incarico-idMembro">
+                    <option value="">Seleziona Membro</option>
+                    {% for membro in membri %}
+                    <option value="{{ membro.id }}">{{ membro.nome }} {{ membro.cognome }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="incarico-nomeRuolo" class="form-label" style="color: white;">Ruolo</label>
+                <select class="form-control" id="incarico-nomeRuolo" name="incarico-nomeRuolo">
+                    <option value="">Seleziona Ruolo</option>
+                    {% for ruolo in ruoli %}
+                    <option value="{{ ruolo.nome }}">{{ ruolo.nome }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-between" style="margin-bottom: 200px;">
+            <button type="submit" class="btn btn-success" id="add-incarico-btn" formaction="{{ url_for('people.add_chore') }}" name="action" value="add">Add</button>
+            <button type="submit" class="btn btn-primary" id="edit-incarico-btn" formaction="{{ url_for('people.edit_chore') }}" name="action" value="edit">Edit</button>
+            <button type="submit" class="btn btn-danger" id="remove-incarico-btn" formaction="{{ url_for('people.remove_chore') }}" name="action" value="delete">Remove</button>
+        </div>
+    </form>
+</div>
+
+
+
+{% endblock %}
+
+{% block scripts %}
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const tableRows = document.querySelectorAll("tr[data-entity]");
+        
+        tableRows.forEach(row => {
+            row.addEventListener("click", function() {
+                const entity = this.dataset.entity;
+                if (entity === "membro") {
+                    document.getElementById("membro-id").value = this.dataset.id;
+                    document.getElementById("membro-nome").value = this.dataset.nome;
+                    document.getElementById("membro-cognome").value = this.dataset.cognome;
+                    document.getElementById("membro-email").value = this.dataset.email;
+                    document.getElementById("membro-password").value = this.dataset.password;
+                } else if (entity === "ruolo") {
+                    document.getElementById("ruolo-nome").value = this.dataset.nome;
+                    document.getElementById("old_name_ruolo").value = this.dataset.nome;
+                } else if (entity === "dipartimento") {
+                    document.getElementById("dipartimento-nome").value = this.dataset.nome;
+                    document.getElementById("old_name_dipartimento").value = this.dataset.nome;
+                } else if (entity === "team") {
+                    document.getElementById("team-nome").value = this.dataset.nome;
+                    document.getElementById("old_name_team").value = this.dataset.nome;
+                    document.getElementById("team-nomedipartimento").value = this.dataset.nomedipartimento;
+                } else if (entity === "incarico") {
+                    document.getElementById("old-incarico-dataInizio").value = this.dataset.datainizio;
+                    document.getElementById("incarico-dataInizio").value = this.dataset.datainizio;
+                    document.getElementById("incarico-dataFine").value = this.dataset.datafine;
+                    document.getElementById("incarico-nomeTeam").value = this.dataset.nometeam;
+                    document.getElementById("old-incarico-nomeTeam").value = this.dataset.nometeam;
+                    document.getElementById("incarico-idMembro").value = this.dataset.idmembro;
+                    document.getElementById("old-incarico-idMembro").value = this.dataset.idmembro;
+                    document.getElementById("incarico-nomeRuolo").value = this.dataset.nomeruolo;
+                    document.getElementById("old-incarico-nomeRuolo").value = this.dataset.nomeruolo;
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}
