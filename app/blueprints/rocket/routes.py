@@ -1,15 +1,18 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
-from ...models import Razzo
+from ...models import Razzo, Motore, Paracadute, Materiale
 from . import rocket_bp  # Importa il blueprint definito in __init__.py
 from app import db
 
 @rocket_bp.route('/rockets')
 def rockets():
-    rockets = Razzo.query.all()
-    print(rockets)
-    return render_template('rockets.html', rockets=rockets)
+    razzi = Razzo.query.all()
+    motori = Motore.query.all()
+    paracaduti = Paracadute.query.all()
+    materiali = Materiale.query.all()
+    return render_template('rockets.html', razzi=razzi, motori=motori, paracaduti=paracaduti, materiali=materiali)
 
-@rocket_bp.route('/rocket/add', methods=['POST'])
+
+@rocket_bp.route('/add_rocket', methods=['POST'])
 def add_rocket():
     try:
         data = request.form
@@ -32,11 +35,18 @@ def add_rocket():
         flash(f'Errore durante l\'aggiunta del razzo: {str(e)}', 'danger')
     return redirect(url_for('rocket.rockets'))
 
-@rocket_bp.route('/rocket/edit', methods=['POST'])
+
+@rocket_bp.route('/edit_rocket', methods=['POST'])
 def edit_rocket():
     try:
         data = request.form
-        razzo = Razzo.query.get(data['nome'])
+        razzo = Razzo.query.filter_by(
+            nome=data['old_nome'],
+            nomeMotore=data['old_nomeMotore'],
+            nomeParacadute=data['old_nomeParacadute'],
+            nomeMateriale=data['old_nomeMateriale']
+        ).first()
+
         if razzo:
             razzo.massa = data['massa']
             razzo.lunghezza = data['lunghezza']
@@ -53,11 +63,18 @@ def edit_rocket():
         flash(f'Errore durante la modifica del razzo: {str(e)}', 'danger')
     return redirect(url_for('rocket.rockets'))
 
-@rocket_bp.route('/rocket/remove', methods=['POST'])
+
+@rocket_bp.route('/remove_rocket', methods=['POST'])
 def remove_rocket():
-    try:
-        nome = request.form['nome']
-        razzo = Razzo.query.get(nome)
+    try:        
+        data = request.form
+        razzo = Razzo.query.filter_by(
+            nome=data['nome'],
+            nomeMotore=data['nomeMotore'],
+            nomeParacadute=data['nomeParacadute'],
+            nomeMateriale=data['nomeMateriale']
+        ).first()
+
         if razzo:
             db.session.delete(razzo)
             db.session.commit()
