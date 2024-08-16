@@ -203,6 +203,7 @@ class DatoSensore(db.Model):
     idMissione = db.Column(db.Integer, db.ForeignKey('missione.id'), nullable=False)
     nomeSensore = db.Column(db.String(100), db.ForeignKey('sensore.nome'), nullable=False)
 
+
 # Classe per la tabella 'RazzoSensore'
 class RazzoSensore(db.Model):
     __tablename__ = "razzo_sensore"

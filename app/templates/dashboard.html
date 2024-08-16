@@ -1,0 +1,92 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h1 class="title">Visualizzazione Dati Sensori</h1>
+
+<label for="mission-select">Seleziona una missione:</label>
+<select class="form-control" id="missionDropdown">
+    <option value="">Seleziona una missione</option>
+    {% for mission in missions %}
+        <option value="{{ mission.id }}">{{ mission.nome }}</option>
+    {% endfor %}
+</select>
+
+<div id="chartsContainer"></div>
+
+{% endblock %}
+
+{% block scripts%}
+<script>
+document.getElementById('missionDropdown').addEventListener('change', function() {
+    const missionId = this.value;
+    if (missionId) {
+        fetch(`/dashboard/data/${missionId}`)
+            .then(response => response.json())
+            .then(data => {
+                const chartsContainer = document.getElementById('chartsContainer');
+                chartsContainer.innerHTML = ''; // Pulisci il contenuto esistente
+
+                // Raggruppa i dati per sensore
+                const sensorData = data.reduce((acc, item) => {
+                    if (!acc[item.nomeSensore]) {
+                        acc[item.nomeSensore] = { labels: [], data: [] };
+                    }
+                    acc[item.nomeSensore].labels.push(new Date(item.timestamp));
+                    acc[item.nomeSensore].data.push(item.valore);
+                    return acc;
+                }, {});
+
+                // Crea un grafico per ogni tipo di sensore
+                for (const [sensorName, sensorInfo] of Object.entries(sensorData)) {
+                    const chartDiv = document.createElement('div');
+                    chartDiv.innerHTML = `<h3 class="title">Grafico per ${sensorName}</h3><canvas id="${sensorName}"></canvas>`;
+                    chartsContainer.appendChild(chartDiv);
+
+                    new Chart(document.getElementById(sensorName), {
+                        type: 'line',
+                        data: {
+                            labels: sensorInfo.labels,
+                            datasets: [{
+                                label: sensorName,
+                                data: sensorInfo.data,
+                                borderColor: 'rgba(75, 192, 192, 1)',
+                                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                x: {
+                                    type: 'time',
+                                    time: {
+                                        unit: 'minute'
+                                    },
+                                    title: {
+                                        display: true,
+                                        text: 'Tempo',
+                                        color: 'white'
+                                    },
+                                    ticks: {
+                                        color: 'white'  // Colore delle etichette sull'asse x
+                                    }
+                                },
+                                y: {
+                                    title: {
+                                        display: true,
+                                        text: 'Valore'
+                                    },
+                                    ticks: {
+                                        color: 'white'  // Colore delle etichette sull'asse y
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+            });
+    } else {
+        document.getElementById('chartsContainer').innerHTML = '';
+    }
+});
+</script>
+{% endblock %}

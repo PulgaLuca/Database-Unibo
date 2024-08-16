@@ -270,8 +270,6 @@ def edit_chore():
         else:
             data_fine = None
 
-        print(data)
-
         incarico = Incarico.query.filter_by(
             dataInizio=data_inizio,
             nomeTeam=data['old-incarico-nomeTeam'],

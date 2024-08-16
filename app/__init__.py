@@ -22,7 +22,8 @@ def create_app():
     from .blueprints.motor import motor_bp
     from .blueprints.parafoil import parafoil_bp
     from .blueprints.people import people_bp
-    
+    from .blueprints.dashboard import dashboard_bp
+
     # app.register_blueprint(auth_bp, url_prefix='/auth')
     app.register_blueprint(main_bp, url_prefix='/')
     app.register_blueprint(material_bp, url_prefix='/material')
@@ -35,5 +36,6 @@ def create_app():
     app.register_blueprint(motor_bp, url_prefix='/motor')
     app.register_blueprint(parafoil_bp, url_prefix='/parafoil')
     app.register_blueprint(people_bp, url_prefix='/people')
+    app.register_blueprint(dashboard_bp, url_prefix='/dashboard')
     
     return app
