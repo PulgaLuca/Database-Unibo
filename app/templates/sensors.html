@@ -98,16 +98,6 @@
         });
     });
 
-    function selectMaterial(nome, note) {
-        document.getElementById('old_nome').value = nome;
-        document.getElementById('new_nome').value = nome;
-        document.getElementById('tipo').value = tipo;
-        document.getElementById('unitaMisura').value = unitaMisura;
-        document.getElementById('accuratezza').value = accuratezza;
-        document.getElementById('frequenza').value = frequenza;
-        document.getElementById('link').value = link;
-    }
-
     document.getElementById('material-form').onsubmit = function() {
         var newNome = document.getElementById('new_nome').value;
         if (!newNome) {

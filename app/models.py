@@ -130,6 +130,7 @@ class MissioneObiettivo(db.Model):
     idMissione = db.Column(db.Integer, db.ForeignKey('missione.id'), primary_key=True)
     idObiettivo = db.Column(db.Integer, db.ForeignKey('obiettivo.id'), primary_key=True)
 
+
 # Classe per la tabella 'AziendaFornitrice'
 class AziendaFornitrice(db.Model):
     __tablename__ = "azienda_fornitrice"
