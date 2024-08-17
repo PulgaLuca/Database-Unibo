@@ -1,7 +1,7 @@
 from datetime import datetime
-from ...models import Missione, Luogo, Payload, Razzo
+from ...models import Missione, Luogo, Payload, Razzo, MissioneObiettivo
 from . import mission_bp  # Importa il blueprint definito in __init__.py
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, jsonify, render_template, request, redirect, url_for, flash
 from app import db
 
 @mission_bp.route('/missions')
@@ -85,3 +85,42 @@ def remove_mission():
         db.session.rollback()
         flash(f'Errore durante la rimozione della missione: {str(e)}', 'danger')
     return redirect(url_for('mission.missions'))
+
+
+############################################## TEST ##############################################
+
+@mission_bp.route('/get_obiettivi/<idMissione>', methods=['GET'])
+def get_obiettivi(idMissione):
+    obiettivi = MissioneObiettivo.query.filter_by(idMissione=idMissione).all()
+    obiettivi_dict = [{"nome": obiettivo.idObiettivo} for obiettivo in obiettivi]
+    print(obiettivi_dict)
+    return jsonify(obiettivi_dict)
+
+
+@mission_bp.route('/add_obiettivo', methods=['POST'])
+def add_obiettivo():
+    data = request.get_json()
+    nome_missione = data.get('idMissione')
+    nome_obiettivo = data.get('idObiettivo')
+    
+    if nome_missione and nome_obiettivo:
+        nuovo_obiettivo = MissioneObiettivo(idMissione=nome_missione, idObiettivo=nome_obiettivo)
+        db.session.add(nuovo_obiettivo)
+        db.session.commit()
+        return jsonify({'success': True})
+    return jsonify({'success': False})
+
+
+@mission_bp.route('/remove_obiettivo', methods=['POST'])
+def remove_obiettivo():
+    data = request.get_json()
+    nome_missione = data.get('idMissione')
+    nome_obiettivo = data.get('idObiettivo')
+    
+    if nome_missione and nome_obiettivo:
+        obiettivo_da_rimuovere = MissioneObiettivo.query.filter_by(idMissione=nome_missione, idObiettivo=nome_obiettivo).first()
+        if obiettivo_da_rimuovere:
+            db.session.delete(obiettivo_da_rimuovere)
+            db.session.commit()
+            return jsonify({'success': True})
+    return jsonify({'success': False})
