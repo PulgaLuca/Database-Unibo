@@ -57,21 +57,25 @@ main {
 }
 
 .overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.8);
-    display: none;
-    justify-content: center;
-    align-items: center;
+    position: fixed; /* Fissa l'overlay rispetto alla finestra del browser */
+    top: 50%; /* Centra verticalmente */
+    left: 50%; /* Centra orizzontalmente */
+    transform: translate(-50%, -50%); /* Sposta l'overlay verso l'alto e a sinistra di metà della sua larghezza/altezza */
+    z-index: 1000; /* Assicura che l'overlay sia sopra altri contenuti */
+    background-color: white; /* Imposta il colore di sfondo */
+    border-radius: 8px; /* Arrotonda gli angoli */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Aggiunge un'ombra per dare profondità */
+    max-width: 150%; /* Limita la larghezza massima dell'overlay */
+    width: 550px; /* Imposta una larghezza predefinita */
+    max-height: 150%; /* Limita l'altezza massima dell'overlay */
+    overflow-y: auto; /* Aggiunge uno scorrimento verticale se il contenuto è troppo lungo */
 }
+
+
 .overlay-content {
     background: white;
     padding: 20px;
     border-radius: 8px;
-    width: 80%;
     max-width: 500px;
     position: relative;
 }
@@ -84,4 +88,17 @@ main {
     border: none;
     padding: 5px 10px;
     cursor: pointer;
+}
+
+#overlay-sensori-table tbody tr {
+    cursor: pointer;
+}
+
+#overlay-sensori-table tbody tr:hover {
+    background-color: #f5f5f5;
+}
+
+#overlay-sensori-table tbody tr.selected {
+    background-color: #d9534f;
+    color: white;
 }

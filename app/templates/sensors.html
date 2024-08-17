@@ -70,6 +70,7 @@
             <button type="submit" class="btn btn-danger" id="remove-btn" formaction="/sensor/remove_sensor" name="action" value="remove">Remove</button>
         </div>
     </form>
+
 </div>
 {% endblock %}
 
@@ -98,12 +99,5 @@
         });
     });
 
-    document.getElementById('material-form').onsubmit = function() {
-        var newNome = document.getElementById('new_nome').value;
-        if (!newNome) {
-            alert("Il nuovo nome non può essere vuoto!");
-            return false;
-        }
-    };
 </script>
 {% endblock %}

@@ -1,13 +1,13 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
-from ...models import Sensore
+from flask import Blueprint, jsonify, render_template, request, redirect, url_for, flash
+from ...models import Razzo, Sensore
 from . import sensor_bp  # Importa il blueprint definito in __init__.py
 from app import db
 
 @sensor_bp.route('/sensors', methods=['GET', 'POST'])
 def sensors():
     sensors = Sensore.query.order_by(Sensore.nome.asc()).all()
-    print(sensors)
-    return render_template('sensors.html', sensors=sensors)
+    razzi = Razzo.query.order_by(Razzo.nome.asc()).all()
+    return render_template('sensors.html', sensors=sensors, razzi=razzi)
 
 
 @sensor_bp.route('/add_sensor', methods=['POST'])

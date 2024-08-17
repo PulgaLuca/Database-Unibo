@@ -14,6 +14,7 @@
             <th>Nome Motore</th>
             <th>Nome Paracadute</th>
             <th>Nome Materiale</th>
+            <th>Sensori Associati</th>
         </tr>
     </thead>
     <tbody>
@@ -28,6 +29,9 @@
             <td>{{ razzo.nomeMotore }}</td>
             <td>{{ razzo.nomeParacadute }}</td>
             <td>{{ razzo.nomeMateriale }}</td>
+            <td>
+                <button class="btn btn-info" onclick="showOverlay('{{ razzo.nome }}')">Mostra Sensori</button>
+            </td>
         </tr>
         {% endfor %}
     </tbody>
@@ -105,6 +109,34 @@
         </div>
     </form>
 </div>
+<div id="overlay-background" class="overlay-background" style="display: none;"></div>
+<div id="overlay" class="overlay" style="display: none;">
+    <div class="overlay-content">
+        <button class="close-btn" onclick="hideOverlay()">Chiudi</button>
+        <h3>Gestione Sensori per <span id="overlay-sensori-nome"></span></h3>
+
+        <!-- Tabella dei sensori associati -->
+        <table id="overlay-sensori-table" class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Nome Sensore</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- I sensori verranno caricati qui tramite JavaScript -->
+            </tbody>
+        </table>
+        <!-- Dropdown per selezionare nuovi sensori -->
+        <select id="overlay-sensori-select" name="overlay-sensori-select" class="form-select">
+            {% for sensore in sensori %}
+                <option value="{{ sensore.nome }}">{{ sensore.nome }}</option>
+            {% endfor %}
+        </select>
+
+        <button class="btn btn-success" onclick="addSensore()">Aggiungi Sensore</button>
+        <button class="btn btn-danger" onclick="removeSensore()">Rimuovi Sensore</button>
+    </div>
+</div>
 {% endblock %}
 
 {% block scripts %}
@@ -140,5 +172,102 @@
             });
         });
     });
+
+    let selectedSensore = null;
+
+function showOverlay(nomeRazzo) {
+    document.getElementById('overlay-sensori-nome').textContent = nomeRazzo;
+    
+    fetch(`/rocket/get_sensori/${nomeRazzo}`)
+    .then(response => response.json())
+    .then(data => {
+        const sensoriTableBody = document.querySelector('#overlay-sensori-table tbody');
+        sensoriTableBody.innerHTML = '';  // Pulisce la tabella esistente
+        data.forEach(sensore => {
+            const row = document.createElement('tr');
+            const cell = document.createElement('td');
+            cell.textContent = sensore.nome;
+            row.appendChild(cell);
+            row.onclick = () => selectSensore(row, sensore.nome);
+            sensoriTableBody.appendChild(row);
+        });
+        document.getElementById('overlay').style.display = 'block';
+    });
+}
+
+function hideOverlay() {
+    document.getElementById('overlay').style.display = 'none';
+}
+
+function selectSensore(row, nomeSensore) {
+    const previousSelected = document.querySelector('#overlay-sensori-table tbody .selected');
+    if (previousSelected) {
+        previousSelected.classList.remove('selected');
+    }
+    row.classList.add('selected');
+    selectedSensore = nomeSensore;
+}
+
+function addSensore() {
+    const nomeRazzo = document.getElementById('overlay-sensori-nome').textContent;
+    const nomeSensore = document.getElementById('overlay-sensori-select').value;
+    
+    fetch('/rocket/add_sensore', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            nomeRazzo: nomeRazzo,
+            nomeSensore: nomeSensore
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const sensoriTableBody = document.querySelector('#overlay-sensori-table tbody');
+            const row = document.createElement('tr');
+            const cell = document.createElement('td');
+            cell.textContent = nomeSensore;
+            row.appendChild(cell);
+            row.onclick = () => selectSensore(row, nomeSensore);
+            sensoriTableBody.appendChild(row);
+        } else {
+            alert('Errore durante l\'aggiunta del sensore.');
+        }
+    });
+}
+
+function removeSensore() {
+    const nomeRazzo = document.getElementById('overlay-sensori-nome').textContent;
+    
+    if (selectedSensore) {
+        fetch('/rocket/remove_sensore', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                nomeRazzo: nomeRazzo,
+                nomeSensore: selectedSensore
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const selectedRow = document.querySelector('#overlay-sensori-table tbody .selected');
+                if (selectedRow) {
+                    selectedRow.remove();
+                }
+                selectedSensore = null;
+            } else {
+                alert('Errore durante la rimozione del sensore.');
+            }
+        });
+    } else {
+        alert('Seleziona un sensore da rimuovere.');
+    }
+}
+
 </script>
 {% endblock %}

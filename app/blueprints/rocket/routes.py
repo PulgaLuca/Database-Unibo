@@ -1,5 +1,5 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
-from ...models import Razzo, Motore, Paracadute, Materiale
+from flask import Blueprint, jsonify, render_template, request, redirect, url_for, flash
+from ...models import Razzo, Motore, Paracadute, Materiale, RazzoSensore, Sensore
 from . import rocket_bp  # Importa il blueprint definito in __init__.py
 from app import db
 
@@ -9,7 +9,8 @@ def rockets():
     motori = Motore.query.all()
     paracaduti = Paracadute.query.all()
     materiali = Materiale.query.all()
-    return render_template('rockets.html', razzi=razzi, motori=motori, paracaduti=paracaduti, materiali=materiali)
+    sensori = Sensore.query.all()
+    return render_template('rockets.html', razzi=razzi, motori=motori, paracaduti=paracaduti, materiali=materiali, sensori=sensori)
 
 
 @rocket_bp.route('/add_rocket', methods=['POST'])
@@ -83,3 +84,40 @@ def remove_rocket():
         db.session.rollback()
         flash(f'Errore durante la rimozione del razzo: {str(e)}', 'danger')
     return redirect(url_for('rocket.rockets'))
+
+############################################## TEST ##############################################
+
+@rocket_bp.route('/get_sensori/<nome_razzo>', methods=['GET'])
+def get_sensori(nome_razzo):
+    print(nome_razzo)
+    sensori = RazzoSensore.query.filter_by(nomeRazzo=nome_razzo).all()
+    sensori_dict = [{"nome": sensore.nomeSensore} for sensore in sensori]
+    print(sensori_dict)
+    return jsonify(sensori_dict)
+
+@rocket_bp.route('/add_sensore', methods=['POST'])
+def add_sensore():
+    data = request.get_json()
+    nome_razzo = data.get('nomeRazzo')
+    nome_sensore = data.get('nomeSensore')
+    
+    if nome_razzo and nome_sensore:
+        nuovo_sensore = RazzoSensore(nomeRazzo=nome_razzo, nomeSensore=nome_sensore)
+        db.session.add(nuovo_sensore)
+        db.session.commit()
+        return jsonify({'success': True})
+    return jsonify({'success': False})
+
+@rocket_bp.route('/remove_sensore', methods=['POST'])
+def remove_sensore():
+    data = request.get_json()
+    nome_razzo = data.get('nomeRazzo')
+    nome_sensore = data.get('nomeSensore')
+    
+    if nome_razzo and nome_sensore:
+        sensore_da_rimuovere = RazzoSensore.query.filter_by(nomeRazzo=nome_razzo, nomeSensore=nome_sensore).first()
+        if sensore_da_rimuovere:
+            db.session.delete(sensore_da_rimuovere)
+            db.session.commit()
+            return jsonify({'success': True})
+    return jsonify({'success': False})
