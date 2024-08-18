@@ -12,6 +12,7 @@
             <th>Luogo</th>
             <th>Payload</th>
             <th>Razzo</th>
+            <th>Obiettivi</th>
         </tr>
     </thead>
     <tbody>
@@ -30,6 +31,9 @@
             <td>{{ missione.idLuogo }}</td>
             <td>{{ missione.idPayload }}</td>
             <td>{{ missione.nomeRazzo }}</td>
+            <td>
+                <button class="btn btn-info" onclick="showOverlay('{{ missione.id }}')">Obiettivi</button>
+            </td>
         </tr>
         {% endfor %}
     </tbody>
@@ -92,6 +96,34 @@
         </div>
     </form>
 </div>
+<div id="overlay-background" class="overlay-background" style="display: none;"></div>
+<div id="overlay" class="overlay" style="display: none;">
+    <div class="overlay-content">
+        <button class="close-btn" onclick="hideOverlay()">Chiudi</button>
+        <h3>Gestione Obiettivi per <span id="overlay-obiettivi-nome"></span></h3>
+
+        <!-- Tabella dei obiettivi associati -->
+        <table id="overlay-obiettivi-table" class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Nome Obiettivo</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- I obiettivi verranno caricati qui tramite JavaScript -->
+            </tbody>
+        </table>
+        <!-- Dropdown per selezionare nuovi obiettivi -->
+        <select id="overlay-obiettivi-select" name="overlay-obiettivi-select" class="form-select">
+            {% for obiettivo in obiettivi %}
+                <option value="{{ obiettivo.id }}">{{ obiettivo.nome }}</option>
+            {% endfor %}
+        </select>
+
+        <button class="btn btn-success" onclick="addObiettivo()">Aggiungi Obiettivo</button>
+        <button class="btn btn-danger" onclick="removeObiettivo()">Rimuovi Obiettivo</button>
+    </div>
+</div>
 {% endblock %}
 
 {% block scripts %}
@@ -123,16 +155,99 @@
             });
         });
     });
+    let selectedObiettivo = null;
+    function showOverlay(idMissione) {
+    document.getElementById('overlay-obiettivi-nome').textContent = idMissione;
+    
+    fetch(`/mission/get_obiettivi/${idMissione}`)
+    .then(response => response.json())
+    .then(data => {
+        const obiettiviTableBody = document.querySelector('#overlay-obiettivi-table tbody');
+        obiettiviTableBody.innerHTML = '';  // Pulisce la tabella esistente
+        data.forEach(obiettivo => {
+            const row = document.createElement('tr');
+            const cell = document.createElement('td');
+            cell.textContent = obiettivo.id;
+            row.appendChild(cell);
+            row.onclick = () => selectObiettivo(row, obiettivo.id);
+            obiettiviTableBody.appendChild(row);
+        });
+        document.getElementById('overlay').style.display = 'block';
+    });
+}
 
-    document.getElementById('mission-form').onsubmit = function() {
-        var missionNome = document.getElementById('mission-nome').value;
-        var missionDataLancio = document.getElementById('mission-dataLancio').value;
-        var missionStato = document.getElementById('mission-stato').value;
+function hideOverlay() {
+    document.getElementById('overlay').style.display = 'none';
+}
 
-        if (!missionNome || !missionDataLancio || !missionStato) {
-            alert("Tutti i campi devono essere compilati!");
-            return false;
+function selectObiettivo(row, idObiettivo) {
+    const previousSelected = document.querySelector('#overlay-obiettivi-table tbody .selected');
+    if (previousSelected) {
+        previousSelected.classList.remove('selected');
+    }
+    row.classList.add('selected');
+    selectedObiettivo = idObiettivo;
+}
+
+function addObiettivo() {
+    const idMissione = document.getElementById('overlay-obiettivi-nome').textContent;
+    const idObiettivo = document.getElementById('overlay-obiettivi-select').value;
+    fetch('/mission/add_obiettivo', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            idMissione: idMissione,
+            idObiettivo: idObiettivo
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const obiettiviTableBody = document.querySelector('#overlay-obiettivi-table tbody');
+            const row = document.createElement('tr');
+            const cell = document.createElement('td');
+            cell.textContent = idObiettivo;
+            row.appendChild(cell);
+            row.onclick = () => selectObiettivo(row, idObiettivo);
+            obiettiviTableBody.appendChild(row);
+        } else {
+            alert('Errore durante l\'aggiunta del obiettivo.');
         }
-    };
+    });
+}
+
+function removeObiettivo() {
+    const idMissione = document.getElementById('overlay-obiettivi-nome').textContent;
+    
+    if (selectedObiettivo) {
+        fetch('/mission/remove_obiettivo', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                idMissione: idMissione,
+                idObiettivo: selectedObiettivo
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const selectedRow = document.querySelector('#overlay-obiettivi-table tbody .selected');
+                if (selectedRow) {
+                    selectedRow.remove();
+                }
+                selectedObiettivo = null;
+            } else {
+                alert('Errore durante la rimozione del obiettivo.');
+            }
+        });
+    } else {
+        alert('Seleziona un obiettivo da rimuovere.');
+    }
+}
+
 </script>
 {% endblock %}

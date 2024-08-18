@@ -175,7 +175,7 @@
 
     let selectedSensore = null;
 
-function showOverlay(nomeRazzo) {
+    function showOverlay(nomeRazzo) {
     document.getElementById('overlay-sensori-nome').textContent = nomeRazzo;
     
     fetch(`/rocket/get_sensori/${nomeRazzo}`)

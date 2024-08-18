@@ -1,5 +1,5 @@
 from datetime import datetime
-from ...models import Missione, Luogo, Payload, Razzo, MissioneObiettivo
+from ...models import Missione, Luogo, Payload, Razzo, MissioneObiettivo, Obiettivo
 from . import mission_bp  # Importa il blueprint definito in __init__.py
 from flask import Blueprint, jsonify, render_template, request, redirect, url_for, flash
 from app import db
@@ -10,7 +10,8 @@ def missions():
     luoghi = Luogo.query.order_by(Luogo.id.asc()).all()
     payloads = Payload.query.order_by(Payload.id.asc()).all()
     razzi = Razzo.query.order_by(Razzo.nome.asc()).all()
-    return render_template('mission.html', missioni=missioni, luoghi=luoghi, payloads=payloads, razzi=razzi)
+    obiettivi = Obiettivo.query.order_by(Obiettivo.nome.asc()).all()
+    return render_template('mission.html', missioni=missioni, luoghi=luoghi, payloads=payloads, razzi=razzi, obiettivi=obiettivi)
 
 
 @mission_bp.route('/add_mission', methods=['POST'])
