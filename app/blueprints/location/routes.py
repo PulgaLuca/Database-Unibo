@@ -2,8 +2,10 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash
 from ...models import Luogo
 from . import location_bp  # Importa il blueprint definito in __init__.py
 from app import db
+from ..auth.routes import login_required
 
 @location_bp.route('/locations', methods=['GET', 'POST'])
+@login_required
 def locations():
     locations = Luogo.query.order_by(Luogo.id.asc()).all()
     print(locations)
@@ -11,6 +13,7 @@ def locations():
 
 
 @location_bp.route('/add_location', methods=['POST'])
+@login_required
 def add_location():
     try:
         data = request.form
@@ -32,6 +35,7 @@ def add_location():
 
 
 @location_bp.route('/edit_location', methods=['POST'])
+@login_required
 def edit_location():
     try:
         data = request.form
@@ -57,6 +61,7 @@ def edit_location():
 
 
 @location_bp.route('/remove_location', methods=['POST'])
+@login_required
 def remove_location():
     try:
         nome = request.form['new_id']

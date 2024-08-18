@@ -2,8 +2,10 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash
 from ...models import Motore
 from . import motor_bp  # Importa il blueprint definito in __init__.py
 from app import db
+from ..auth.routes import login_required
 
 @motor_bp.route('/motors', methods=['GET', 'POST'])
+@login_required
 def motors():
     motors = Motore.query.order_by(Motore.nome.asc()).all()
     print(motors)
@@ -11,6 +13,7 @@ def motors():
 
 
 @motor_bp.route('/add_motor', methods=['POST'])
+@login_required
 def add_motor():
     try:
         data = request.form
@@ -32,6 +35,7 @@ def add_motor():
 
 
 @motor_bp.route('/edit_motor', methods=['POST'])
+@login_required
 def edit_motor():
     try:
         data = request.form
@@ -57,6 +61,7 @@ def edit_motor():
 
 
 @motor_bp.route('/remove_motor', methods=['POST'])
+@login_required
 def remove_motor():
     try:
         nome = request.form['new_nome']

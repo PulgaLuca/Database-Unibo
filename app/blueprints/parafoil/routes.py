@@ -2,8 +2,11 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash
 from ...models import Paracadute
 from . import parafoil_bp  # Importa il blueprint definito in __init__.py
 from app import db
+from ..auth.routes import login_required
+
 
 @parafoil_bp.route('/parafoils', methods=['GET', 'POST'])
+@login_required
 def parafoils():
     parafoils = Paracadute.query.order_by(Paracadute.nome.asc()).all()
     print(parafoils)
@@ -11,6 +14,7 @@ def parafoils():
 
 
 @parafoil_bp.route('/add_parafoil', methods=['POST'])
+@login_required
 def add_parafoil():
     try:
         data = request.form
@@ -30,6 +34,7 @@ def add_parafoil():
 
 
 @parafoil_bp.route('/edit_parafoil', methods=['POST'])
+@login_required
 def edit_parafoil():
     try:
         data = request.form
@@ -53,6 +58,7 @@ def edit_parafoil():
 
 
 @parafoil_bp.route('/remove_parafoil', methods=['POST'])
+@login_required
 def remove_parafoil():
     try:
         nome = request.form['new_nome']

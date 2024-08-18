@@ -2,9 +2,11 @@ from ...models import Simulazione, Team, Razzo
 from . import simulation_bp  # Importa il blueprint definito in __init__.py
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from app import db
+from ..auth.routes import login_required
 
 
 @simulation_bp.route('/simulations')
+@login_required
 def simulations():
     simulazioni = Simulazione.query.all()
     teams = Team.query.all()
@@ -13,6 +15,7 @@ def simulations():
 
 
 @simulation_bp.route('/add_simulation', methods=['POST'])
+@login_required
 def add_simulazione():
     try:
         data = request.form
@@ -33,6 +36,7 @@ def add_simulazione():
 
 
 @simulation_bp.route('/edit_simulation', methods=['POST'])
+@login_required
 def edit_simulazione():
     try:
         data = request.form
@@ -58,6 +62,7 @@ def edit_simulazione():
 
 
 @simulation_bp.route('/remove_simulation', methods=['POST'])
+@login_required
 def remove_simulazione():
     try:
         data = request.form

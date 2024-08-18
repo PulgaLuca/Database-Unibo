@@ -20,8 +20,12 @@
                     <img src="../static/img/logo.JPG" style="width: 200px;">
                 </a>
                 <div class="ms-auto d-flex align-items-center">
-                    <span class="me-3">Hi, Luca</span>
-                    <a href="/logout" class="btn btn-outline-light">Logout</a>
+                    {% if session.get('user_email') %}
+                        <span class="me-3">Hi, {{ session.get('user_email') }}</span>
+                        <a href="{{ url_for('auth.logout') }}" class="btn btn-outline-light">Logout</a>
+                    {% else %}
+                        <p><a href="{{ url_for('auth.login') }}" class="btn btn-outline-light">Login</a></p>
+                    {% endif %}
                 </div>
             </nav>
         </div>

@@ -1,11 +1,14 @@
-from datetime import datetime
 from flask import Blueprint, render_template, request, redirect, url_for, flash
+from werkzeug.security import generate_password_hash
+from datetime import datetime
 from ...models import Membro, Ruolo, Team, Dipartimento, Incarico
 from . import people_bp  # Importa il blueprint definito in __init__.py
 from app import db
+from ..auth.routes import login_required
 
 
 @people_bp.route('/manage_people', methods=['GET', 'POST'])
+@login_required
 def manage_people():
     membri = Membro.query.all()
     ruoli = Ruolo.query.all()
@@ -17,14 +20,16 @@ def manage_people():
 ##########################################################  MEMBRO  ######################################################################################
 
 @people_bp.route('/add_member', methods=['POST'])
+@login_required
 def add_member():
     try:
         data = request.form
+        hashed_password = generate_password_hash(data['membro-password'])
         nuovo_membro = Membro(
             nome=data['membro-nome'],
             cognome=data['membro-cognome'],
             email=data['membro-email'],
-            password=data['membro-password'],
+            password=hashed_password,
         )
         db.session.add(nuovo_membro)
         db.session.commit()
@@ -36,6 +41,7 @@ def add_member():
 
 
 @people_bp.route('/edit_member', methods=['POST'])
+@login_required
 def edit_member():
     try:
         data = request.form
@@ -56,6 +62,7 @@ def edit_member():
 
 
 @people_bp.route('/remove_member', methods=['POST'])
+@login_required
 def remove_member():
     try:
         data = request.form
@@ -76,6 +83,7 @@ def remove_member():
 ##############################################################  RUOLO  ##################################################################################
 
 @people_bp.route('/add_role', methods=['POST'])
+@login_required
 def add_role():
     try:
         data = request.form
@@ -92,6 +100,7 @@ def add_role():
 
 
 @people_bp.route('/edit_role', methods=['POST'])
+@login_required
 def edit_role():
     try:
         data = request.form
@@ -109,6 +118,7 @@ def edit_role():
 
 
 @people_bp.route('/remove_role', methods=['POST'])
+@login_required
 def remove_role():
     try:
         data = request.form
@@ -128,6 +138,7 @@ def remove_role():
 ##############################################################  TEAM  ##################################################################################
 
 @people_bp.route('/add_team', methods=['POST'])
+@login_required
 def add_team():
     try:
         data = request.form
@@ -145,6 +156,7 @@ def add_team():
 
 
 @people_bp.route('/edit_team', methods=['POST'])
+@login_required
 def edit_team():
     try:
         data = request.form
@@ -162,6 +174,7 @@ def edit_team():
 
 
 @people_bp.route('/remove_team', methods=['POST'])
+@login_required
 def remove_team():
     try:
         data = request.form
@@ -180,6 +193,7 @@ def remove_team():
 ##############################################################  DIPARTIMENTO  ##################################################################################
 
 @people_bp.route('/add_department', methods=['POST'])
+@login_required
 def add_department():
     try:
         data = request.form
@@ -196,6 +210,7 @@ def add_department():
 
 
 @people_bp.route('/edit_department', methods=['POST'])
+@login_required
 def edit_department():
     try:
         data = request.form
@@ -213,6 +228,7 @@ def edit_department():
 
 
 @people_bp.route('/remove_department', methods=['POST'])
+@login_required
 def remove_department():
     try:
         data = request.form
@@ -231,6 +247,7 @@ def remove_department():
 ##############################################################  INCARICO  ##################################################################################
 
 @people_bp.route('/add_chore', methods=['POST'])
+@login_required
 def add_chore():
     try:
         data = request.form
@@ -259,6 +276,7 @@ def add_chore():
 
 
 @people_bp.route('/edit_chore', methods=['POST'])
+@login_required
 def edit_chore():
     try:
         data = request.form
@@ -293,6 +311,7 @@ def edit_chore():
 
 
 @people_bp.route('/remove_chore', methods=['POST'])
+@login_required
 def remove_chore():
     try:
         data = request.form

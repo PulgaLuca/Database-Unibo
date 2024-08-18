@@ -10,7 +10,7 @@ def create_app():
     migrate.init_app(app, db)
 
     # Blueprints registrations.
-    # from .blueprints.auth import auth_bp
+    from .blueprints.auth import auth_bp
     from .blueprints.main import main_bp
     from .blueprints.mission import mission_bp
     from .blueprints.rocket import rocket_bp
@@ -26,7 +26,7 @@ def create_app():
     from .blueprints.firms import firm_bp
     from .blueprints.simulation import simulation_bp
     
-    # app.register_blueprint(auth_bp, url_prefix='/auth')
+    app.register_blueprint(auth_bp, url_prefix='/auth')
     app.register_blueprint(main_bp, url_prefix='/')
     app.register_blueprint(material_bp, url_prefix='/material')
     app.register_blueprint(mission_bp, url_prefix='/mission')

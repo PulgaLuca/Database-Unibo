@@ -2,8 +2,11 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash
 from ...models import Payload
 from . import payload_bp  # Importa il blueprint definito in __init__.py
 from app import db
+from ..auth.routes import login_required
+
 
 @payload_bp.route('/payloads', methods=['GET', 'POST'])
+@login_required
 def payloads():
     payloads = Payload.query.order_by(Payload.id.asc()).all()
     print(payloads)
@@ -11,6 +14,7 @@ def payloads():
 
 
 @payload_bp.route('/add_payload', methods=['POST'])
+@login_required
 def add_payload():
     try:
         data = request.form
@@ -32,6 +36,7 @@ def add_payload():
 
 
 @payload_bp.route('/edit_payload', methods=['POST'])
+@login_required
 def edit_payload():
     try:
         data = request.form
@@ -57,6 +62,7 @@ def edit_payload():
 
 
 @payload_bp.route('/remove_payload', methods=['POST'])
+@login_required
 def remove_payload():
     try:
         nome = request.form['new_id']

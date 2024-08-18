@@ -3,8 +3,11 @@ from ...models import Missione, Luogo, Payload, Razzo, MissioneObiettivo, Obiett
 from . import mission_bp  # Importa il blueprint definito in __init__.py
 from flask import Blueprint, jsonify, render_template, request, redirect, url_for, flash
 from app import db
+from ..auth.routes import login_required
+
 
 @mission_bp.route('/missions')
+@login_required
 def missions():
     missioni = Missione.query.order_by(Missione.id.asc()).all()
     luoghi = Luogo.query.order_by(Luogo.id.asc()).all()
@@ -15,6 +18,7 @@ def missions():
 
 
 @mission_bp.route('/add_mission', methods=['POST'])
+@login_required
 def add_mission():
     try:
         data = request.form
@@ -38,6 +42,7 @@ def add_mission():
 
 
 @mission_bp.route('/edit_mission', methods=['POST'])
+@login_required
 def edit_mission():
     try:
         data = request.form
@@ -67,6 +72,7 @@ def edit_mission():
 
 
 @mission_bp.route('/remove_mission', methods=['POST'])
+@login_required
 def remove_mission():
     try:
         data = request.form
@@ -91,6 +97,7 @@ def remove_mission():
 ############################################## TEST ##############################################
 
 @mission_bp.route('/get_obiettivi/<idMissione>', methods=['GET'])
+@login_required
 def get_obiettivi(idMissione):
     obiettivi = MissioneObiettivo.query.filter_by(idMissione=idMissione).all()
     obiettivi_dict = [{"nome": obiettivo.idObiettivo} for obiettivo in obiettivi]
@@ -99,6 +106,7 @@ def get_obiettivi(idMissione):
 
 
 @mission_bp.route('/add_obiettivo', methods=['POST'])
+@login_required
 def add_obiettivo():
     data = request.get_json()
     nome_missione = data.get('idMissione')
@@ -113,6 +121,7 @@ def add_obiettivo():
 
 
 @mission_bp.route('/remove_obiettivo', methods=['POST'])
+@login_required
 def remove_obiettivo():
     data = request.get_json()
     nome_missione = data.get('idMissione')

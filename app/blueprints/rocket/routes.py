@@ -2,8 +2,11 @@ from flask import Blueprint, jsonify, render_template, request, redirect, url_fo
 from ...models import Razzo, Motore, Paracadute, Materiale, RazzoSensore, Sensore
 from . import rocket_bp  # Importa il blueprint definito in __init__.py
 from app import db
+from ..auth.routes import login_required
+
 
 @rocket_bp.route('/rockets')
+@login_required
 def rockets():
     razzi = Razzo.query.all()
     motori = Motore.query.all()
@@ -14,6 +17,7 @@ def rockets():
 
 
 @rocket_bp.route('/add_rocket', methods=['POST'])
+@login_required
 def add_rocket():
     try:
         data = request.form
@@ -38,6 +42,7 @@ def add_rocket():
 
 
 @rocket_bp.route('/edit_rocket', methods=['POST'])
+@login_required
 def edit_rocket():
     try:
         data = request.form
@@ -67,6 +72,7 @@ def edit_rocket():
 
 
 @rocket_bp.route('/remove_rocket', methods=['POST'])
+@login_required
 def remove_rocket():
     try:        
         data = request.form
@@ -89,6 +95,7 @@ def remove_rocket():
 ############################################## TEST ##############################################
 
 @rocket_bp.route('/get_sensori/<nome_razzo>', methods=['GET'])
+@login_required
 def get_sensori(nome_razzo):
     print(nome_razzo)
     sensori = RazzoSensore.query.filter_by(nomeRazzo=nome_razzo).all()
@@ -96,7 +103,9 @@ def get_sensori(nome_razzo):
     print(sensori_dict)
     return jsonify(sensori_dict)
 
+
 @rocket_bp.route('/add_sensore', methods=['POST'])
+@login_required
 def add_sensore():
     data = request.get_json()
     nome_razzo = data.get('nomeRazzo')
@@ -109,7 +118,9 @@ def add_sensore():
         return jsonify({'success': True})
     return jsonify({'success': False})
 
+
 @rocket_bp.route('/remove_sensore', methods=['POST'])
+@login_required
 def remove_sensore():
     data = request.get_json()
     nome_razzo = data.get('nomeRazzo')

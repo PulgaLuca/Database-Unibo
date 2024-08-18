@@ -2,9 +2,11 @@ from flask import Blueprint, jsonify, render_template, request, redirect, url_fo
 from ...models import AziendaConsulenziale, AziendaFinanziatrice, AziendaFornitrice, MissioneConsulenza, MissioneFinanziatore, MissioneFornitore, Missione
 from . import firm_bp  # Importa il blueprint definito in __init__.py
 from app import db
+from ..auth.routes import login_required
 
 
 @firm_bp.route('/firms', methods=['GET', 'POST'])
+@login_required
 def firms():
     aziende_fornitrici = AziendaFornitrice.query.order_by(AziendaFornitrice.nome.asc()).all()
     aziende_consulenziali = AziendaConsulenziale.query.order_by(AziendaConsulenziale.nome.asc()).all()
@@ -14,6 +16,7 @@ def firms():
 ############################################## FINANZIATORE ##############################################
 
 @firm_bp.route('/finanziatore_add_azienda', methods=['POST'])
+@login_required
 def finanziatore_add_azienda():
     try:
         data = request.form
@@ -33,6 +36,7 @@ def finanziatore_add_azienda():
 
 
 @firm_bp.route('/finanziatore_edit_azienda', methods=['POST'])
+@login_required
 def finanziatore_edit_azienda():
     try:
         data = request.form
@@ -54,6 +58,7 @@ def finanziatore_edit_azienda():
 
 
 @firm_bp.route('/finanziatore_remove_azienda', methods=['POST'])
+@login_required
 def finanziatore_remove_azienda():
     try:
         nome = request.form['azienda-nome-finanziatrice']
@@ -71,6 +76,7 @@ def finanziatore_remove_azienda():
 ############################################## FORNITORE ##############################################
 
 @firm_bp.route('/fornitore_add_azienda', methods=['POST'])
+@login_required
 def fornitore_add_azienda():
     try:
         data = request.form
@@ -90,6 +96,7 @@ def fornitore_add_azienda():
 
 
 @firm_bp.route('/fornitore_edit_azienda', methods=['POST'])
+@login_required
 def fornitore_edit_azienda():
     try:
         data = request.form
@@ -111,6 +118,7 @@ def fornitore_edit_azienda():
 
 
 @firm_bp.route('/fornitore_remove_azienda', methods=['POST'])
+@login_required
 def fornitore_remove_azienda():
     try:
         nome = request.form['azienda-nome-fornitrice']
@@ -127,6 +135,7 @@ def fornitore_remove_azienda():
 ############################################## CONSULENZA ##############################################
 
 @firm_bp.route('/consulenza_add_azienda', methods=['POST'])
+@login_required
 def consulenza_add_azienda():
     try:
         data = request.form
@@ -146,6 +155,7 @@ def consulenza_add_azienda():
 
 
 @firm_bp.route('/consulenza_edit_azienda', methods=['POST'])
+@login_required
 def consulenza_edit_azienda():
     try:
         data = request.form
@@ -167,6 +177,7 @@ def consulenza_edit_azienda():
 
 
 @firm_bp.route('/consulenza_remove_azienda', methods=['POST'])
+@login_required
 def consulenza_remove_azienda():
     try:
         nome = request.form['azienda-nome-consulenziale']
@@ -196,6 +207,7 @@ def get_modello(tipo_entita):
     return modello
 
 @firm_bp.route('/get_missioni/<tipo_entita>/<nome_entita>')
+@login_required
 def get_missioni(tipo_entita, nome_entita):
     modello = get_modello(tipo_entita)
     missioni = modello.query.filter_by(nomeAzienda=nome_entita).all()
@@ -204,6 +216,7 @@ def get_missioni(tipo_entita, nome_entita):
 
 
 @firm_bp.route('/manage_mission/<tipo_entita>/<nome_entita>', methods=['POST'])
+@login_required
 def manage_mission(tipo_entita, nome_entita):
     data = request.get_json()
     action = data['action']
@@ -211,7 +224,6 @@ def manage_mission(tipo_entita, nome_entita):
 
     modello = get_modello(tipo_entita)
 
-    # Controlla se la missione esiste nel database
     missione_esistente = db.session.query(db.exists().where(Missione.id == missionId)).scalar()
     if not missione_esistente:
         return jsonify({'success': False, 'message': 'ID missione non esistente.'})

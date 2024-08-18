@@ -2,8 +2,11 @@ from flask import Blueprint, jsonify, render_template, request, redirect, url_fo
 from ...models import Razzo, Sensore
 from . import sensor_bp  # Importa il blueprint definito in __init__.py
 from app import db
+from ..auth.routes import login_required
+
 
 @sensor_bp.route('/sensors', methods=['GET', 'POST'])
+@login_required
 def sensors():
     sensors = Sensore.query.order_by(Sensore.nome.asc()).all()
     razzi = Razzo.query.order_by(Razzo.nome.asc()).all()
@@ -11,6 +14,7 @@ def sensors():
 
 
 @sensor_bp.route('/add_sensor', methods=['POST'])
+@login_required
 def add_sensor():
     try:
         data = request.form
@@ -32,13 +36,13 @@ def add_sensor():
 
 
 @sensor_bp.route('/edit_sensor', methods=['POST'])
+@login_required
 def edit_sensor():
     try:
         data = request.form
         old_nome = Sensore.query.get(data['old_nome'])
         
         if old_nome:
-            # Modifica il record esistente
             old_nome.nome = data['new_nome']
             old_nome.tipo = data['tipo']
             old_nome.unitaMisura = data['unitaMisura']
@@ -57,6 +61,7 @@ def edit_sensor():
 
 
 @sensor_bp.route('/remove_sensor', methods=['POST'])
+@login_required
 def remove_sensor():
     try:
         nome = request.form['new_nome']

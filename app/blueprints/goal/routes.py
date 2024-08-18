@@ -2,8 +2,10 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash
 from ...models import Obiettivo
 from . import goal_bp  # Importa il blueprint definito in __init__.py
 from app import db
+from ..auth.routes import login_required
 
 @goal_bp.route('/goals', methods=['GET', 'POST'])
+@login_required
 def goals():
     goals = Obiettivo.query.order_by(Obiettivo.id.asc()).all()
     print(goals)
@@ -11,6 +13,7 @@ def goals():
 
 
 @goal_bp.route('/add_goal', methods=['POST'])
+@login_required
 def add_goal():
     try:
         data = request.form
@@ -28,6 +31,7 @@ def add_goal():
 
 
 @goal_bp.route('/edit_goal', methods=['POST'])
+@login_required
 def edit_goal():
     try:
         data = request.form
@@ -49,6 +53,7 @@ def edit_goal():
 
 
 @goal_bp.route('/remove_goal', methods=['POST'])
+@login_required
 def remove_goal():
     try:
         nome = request.form['new_id']

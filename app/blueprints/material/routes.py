@@ -2,14 +2,17 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash
 from ...models import Materiale
 from . import material_bp  # Importa il blueprint definito in __init__.py
 from app import db
+from ..auth.routes import login_required
 
 @material_bp.route('/materials')
+@login_required
 def materials():
     materials = Materiale.query.order_by(Materiale.nome.asc()).all()
     print(materials)
     return render_template('materials.html', materials=materials)
 
 @material_bp.route('/add_material', methods=['POST'])
+@login_required
 def add_material():
     try:
         data = request.form
@@ -27,6 +30,7 @@ def add_material():
 
 
 @material_bp.route('/edit_material', methods=['POST'])
+@login_required
 def edit_material():
     try:
         data = request.form
@@ -47,6 +51,7 @@ def edit_material():
 
 
 @material_bp.route('/remove_material', methods=['POST'])
+@login_required
 def remove_material():
     try:
         nome = request.form['new_nome']
