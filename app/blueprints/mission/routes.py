@@ -71,8 +71,8 @@ def remove_mission():
     try:
         data = request.form
         missione = Missione.query.filter_by(
-            id=data['mission-id'],
-            idPayload=int(data['mission-idPayload']),
+            id=data['old-mission-id'],
+            idPayload=data['mission-idPayload'],
             idLuogo=data['mission-idLuogo'],
             nomeRazzo=data['mission-nomeRazzo']
         ).first()

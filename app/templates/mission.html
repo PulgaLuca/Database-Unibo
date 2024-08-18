@@ -165,11 +165,12 @@
         const obiettiviTableBody = document.querySelector('#overlay-obiettivi-table tbody');
         obiettiviTableBody.innerHTML = '';  // Pulisce la tabella esistente
         data.forEach(obiettivo => {
+            console.log(obiettivo)
             const row = document.createElement('tr');
             const cell = document.createElement('td');
-            cell.textContent = obiettivo.id;
+            cell.textContent = obiettivo.nome;
             row.appendChild(cell);
-            row.onclick = () => selectObiettivo(row, obiettivo.id);
+            row.onclick = () => selectObiettivo(row, obiettivo.nome);
             obiettiviTableBody.appendChild(row);
         });
         document.getElementById('overlay').style.display = 'block';

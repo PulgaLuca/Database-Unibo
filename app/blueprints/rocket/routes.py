@@ -49,6 +49,7 @@ def edit_rocket():
         ).first()
 
         if razzo:
+            razzo.nome = data['nome']
             razzo.massa = data['massa']
             razzo.lunghezza = data['lunghezza']
             razzo.larghezza = data['larghezza']

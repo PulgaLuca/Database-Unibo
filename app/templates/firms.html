@@ -174,7 +174,7 @@
     </div>
 
     <!-- Overlay per mostrare e gestire le missioni associate -->
-    <div id="overlay" class="overlay">
+    <div id="overlay" class="overlay" style="display: none;">
         <div class="overlay-content">
             <button class="close-btn" onclick="hideOverlay()">Chiudi</button>
             <h3>Gestione Missioni per <span id="overlay-azienda-nome"></span></h3>
@@ -193,7 +193,6 @@
                 </div>
                 <div class="d-flex justify-content-between">
                     <button type="submit" class="btn btn-success" id="add-mission-btn">Aggiungi</button>
-                    <button type="submit" class="btn btn-primary" id="edit-mission-btn">Modifica</button>
                     <button type="button" class="btn btn-danger" id="remove-mission-btn" onclick="removeMission()">Rimuovi</button>
                 </div>
             </form>
