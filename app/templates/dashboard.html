@@ -3,9 +3,9 @@
 {% block content %}
 <h1 class="title">Visualizzazione Dati Sensori</h1>
 
-<label for="mission-select">Seleziona una missione:</label>
+<label for="mission-select" style="color: white;">Seleziona una missione:</label>
 <select class="form-control" id="missionDropdown">
-    <option value="">Seleziona una missione</option>
+    <option value="">Missioni</option>
     {% for mission in missions %}
         <option value="{{ mission.id }}">{{ mission.nome }}</option>
     {% endfor %}
